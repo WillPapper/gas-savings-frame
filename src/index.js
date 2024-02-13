@@ -16,7 +16,12 @@ app.set("views", __dirname + "/views");
 
 require("dotenv").config();
 
+// Puppeteer browser instance
 let browser;
+// If a Render External URL is provided, use that as the base URL. Otherwise, use localhost:3000
+let baseUrl = process.env.RENDER_EXTERNAL_URL
+  ? process.env.RENDER_EXTERNAL_URL
+  : "http://localhost:3000";
 
 // Close the browser when the process is terminated
 process.on("SIGINT", async () => {
@@ -36,7 +41,7 @@ app.get("/", async (req, res) => {
 
 app.get("/frame-image", async (req, res) => {
   try {
-    const screenshotBuffer = await generateImage("http://localhost:3000");
+    const screenshotBuffer = await generateImage(baseUrl);
     res.setHeader("Content-Type", "image/png");
     res.send(screenshotBuffer);
   } catch (error) {
