@@ -23,6 +23,10 @@ app.post("/", async (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
+app.get("/healthz", async (req, res) => {
+  res.send("ok");
+});
+
 const port = process.env.NODE_ENV === "production" ? 80 : 3000;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
