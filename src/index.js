@@ -11,11 +11,17 @@ require("dotenv").config();
 
 // If we receive a get request, we know that this is the initial request to the
 // Frame
-app.get("/gas-savings-frame", async (req, res) => {});
+app.get("/", async (req, res) => {
+  // Return the HTML file
+  res.sendFile(__dirname + "/public/index.html");
+});
 
 // If we receive a post request, we know that this is a subsequent request to
 // the Frame
-app.post("/gas-savings-frame", async (req, res) => {});
+app.post("/", async (req, res) => {
+  // Return the HTML file
+  res.sendFile(__dirname + "/public/index.html");
+});
 
 const port = process.env.NODE_ENV === "production" ? 80 : 3000;
 app.listen(port, () => {
