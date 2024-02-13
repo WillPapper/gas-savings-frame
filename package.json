@@ -1,0 +1,9 @@
+{
+  "name": "gas-savings-frame",
+  "version": "0.0.1",
+  "description": "A Farcaster Frame that tracks gas savings",
+  "main": "index.js",
+  "repository": "git@github.com:WillPapper/gas-savings-frame.git",
+  "author": "Will Papper <contact@papper.me>",
+  "license": "MIT"
+}
