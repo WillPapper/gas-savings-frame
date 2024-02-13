@@ -69,10 +69,16 @@ async function startBrowser() {
 }
 
 // Function to generate a screenshot of a given URL and return as a buffer
-async function generateImage(url) {
+// Aspect ratio of 1.91 is the aspect ratio of the Frame: https://docs.farcaster.xyz/reference/frames/spec
+async function generateImage(url, width = 1910, aspectRatio = 1.91) {
+  const height = Math.round(width / aspectRatio);
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
+  // Set viewport to match the Frame aspect ratio
+  await page.setViewport({ width, height });
   await page.goto(url, { waitUntil: "networkidle2" });
+
+  // Take screenshot and return it to the Express server
   const screenshotBuffer = await page.screenshot({ encoding: "binary" });
   await browser.close();
   return screenshotBuffer;
