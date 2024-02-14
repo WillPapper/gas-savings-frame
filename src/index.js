@@ -33,7 +33,7 @@ process.on("SIGINT", async () => {
 // If we receive a get request, we know that this is the initial request to the
 // Frame
 app.get("/", async (req, res) => {
-  res.render("index", {
+  res.render("frame-image", {
     title: "Hello, Mustache!",
     message: "Mustache is working with Express!",
   });
