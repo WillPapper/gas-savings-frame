@@ -25,6 +25,29 @@ let baseUrl = process.env.RENDER_EXTERNAL_URL
   ? process.env.RENDER_EXTERNAL_URL
   : "http://localhost:3000";
 
+// Gas calculation info
+// Average gas for all three of the actions
+// Calculated via (0.000000000015883006 + 0.00000000003338648 + 0.000000000039484454)/3
+// See mint: https://explorer-frame.syndicate.io/tx/0xd65b922e05ea3292c8b1c1b52399fae80138504c4f331059b23a70ed125673e9
+// Store data: https://explorer-frame.syndicate.io/tx/0x977f0fc87ef1a100b1826eb7960404ab52421fdf62ccbeeaa69bca685b8f5328
+// Deploy contract: https://explorer-frame.syndicate.io/tx/0x402d9cc948f2fffd3bdbfa05ed84edb20b777c9cacb9493af576fb4b59b5b33d
+// All values are in ETH
+let gasPerAction = process.env.GAS_PER_ACTION
+  ? process.env.GAS_PER_ACTION
+  : 0.000000000029584646;
+
+// Assumes 35 gwei gas price
+// Calculated via:
+// ((0.000000000015883006 + 0.00000000003338648 + 0.000000000039484454)/3) * (0.000000035/0.000000000000000251)
+// All values are in ETH
+let gasPerActionMainnet = process.env.GAS_PER_ACTION_MAINNET
+  ? process.env.GAS_PER_ACTION_MAINNET
+  : 0.004125349136786188;
+
+let ethPriceUsd = process.env.GAS_PRICE_USD
+  ? process.env.GAS_PRICE_USD
+  : 2744.22;
+
 // Close the browser when the process is terminated
 process.on("SIGINT", async () => {
   console.log("Closing browser");
@@ -97,3 +120,5 @@ async function generateImage(url, width = 800, aspectRatio = 1.91) {
   await browser.close();
   return screenshotBuffer;
 }
+
+async function estimateGasUsed() {}
