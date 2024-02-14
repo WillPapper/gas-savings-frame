@@ -42,7 +42,7 @@ contract SyndicateGasSavingsNFT is ERC721, Ownable {
     // The deployer is set as the initial owner by default. Make sure to
     // transfer this to a Safe or other multisig for long-term use!
     // You can call `transferOwnership` to do this.
-    constructor() ERC721("SyndicateFrameNFT", "SYNFRAME") Ownable(msg.sender) {
+    constructor() ERC721("Syndicate Gas Savings NFT", "SAVEGAS") Ownable(msg.sender) {
         // Update this with your own NFT collection's metadata
         defaultURI = "ipfs://QmSFqezaUhBKr32Z2vgFrbDPGYdbcj8zQcQvsDqbU6b6UH";
         maxMintPerAddress = 1;
