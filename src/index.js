@@ -461,6 +461,11 @@ async function getActionImageUri() {
 
 async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
   // Default value and also used for the mint button of buttonIndex 1
+  console.log("sendSyndicateTransaction Button index: ", buttonIndex);
+  console.log(
+    "sendSyndicateTransaction Frame trusted data: ",
+    frameTrustedData
+  );
   let functionSignature = "mint(address)";
   // Store data button was clicked
   if (buttonIndex === 2) {
@@ -483,4 +488,8 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
       args: { to: "{frame-user}" },
     }),
   });
+  console.log(
+    "sendSyndicateTransaction Syndicate transaction response: ",
+    await res.json()
+  );
 }
