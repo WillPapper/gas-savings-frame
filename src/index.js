@@ -150,21 +150,21 @@ app.post("/", async (req, res) => {
     if (buttonIndex === 1) {
       res.render("frame-metadata", {
         baseUrl: baseUrl,
-        frameImage: "frame-active-mint-image",
+        frameImage: "frame-action-mint-image",
       });
     }
     // Store data button was clicked
     else if (buttonIndex === 2) {
       res.render("frame-metadata", {
         baseUrl: baseUrl,
-        frameImage: "frame-active-store-data-image",
+        frameImage: "frame-action-store-data-image",
       });
     }
     // Deploy contract button was clicked
     else if (buttonIndex === 3) {
       res.render("frame-metadata", {
         baseUrl: baseUrl,
-        frameImage: "frame-active-deploy-contract-image",
+        frameImage: "frame-action-deploy-contract-image",
       });
     }
   }
@@ -203,8 +203,8 @@ app.get("/frame-initial-image", async (req, res) => {
   }
 });
 
-app.get("/frame-active-mint", async (req, res) => {
-  res.render("frame-active", {
+app.get("/frame-action-mint", async (req, res) => {
+  res.render("frame-action", {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(1),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(1),
@@ -213,10 +213,10 @@ app.get("/frame-active-mint", async (req, res) => {
   });
 });
 
-app.get("/frame-active-mint-image", async (req, res) => {
+app.get("/frame-action-mint-image", async (req, res) => {
   try {
     const screenshotBuffer = await generateImage(
-      baseUrl + "/frame-active-mint"
+      baseUrl + "/frame-action-mint"
     );
     res.setHeader("Content-Type", "image/png");
     res.send(screenshotBuffer);
@@ -226,8 +226,8 @@ app.get("/frame-active-mint-image", async (req, res) => {
   }
 });
 
-app.get("/frame-active-store-data", async (req, res) => {
-  res.render("frame-active", {
+app.get("/frame-action-store-data", async (req, res) => {
+  res.render("frame-action", {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(2),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(2),
@@ -236,10 +236,10 @@ app.get("/frame-active-store-data", async (req, res) => {
   });
 });
 
-app.get("/frame-active-store-data-image", async (req, res) => {
+app.get("/frame-action-store-data-image", async (req, res) => {
   try {
     const screenshotBuffer = await generateImage(
-      baseUrl + "/frame-active-store-data"
+      baseUrl + "/frame-action-store-data"
     );
     res.setHeader("Content-Type", "image/png");
     res.send(screenshotBuffer);
@@ -249,8 +249,8 @@ app.get("/frame-active-store-data-image", async (req, res) => {
   }
 });
 
-app.get("/frame-active-deploy-contract", async (req, res) => {
-  res.render("frame-active", {
+app.get("/frame-action-deploy-contract", async (req, res) => {
+  res.render("frame-action", {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(3),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(3),
@@ -259,10 +259,10 @@ app.get("/frame-active-deploy-contract", async (req, res) => {
   });
 });
 
-app.get("/frame-active-deploy-contract-image", async (req, res) => {
+app.get("/frame-action-deploy-contract-image", async (req, res) => {
   try {
     const screenshotBuffer = await generateImage(
-      baseUrl + "/frame-active-deploy-contract"
+      baseUrl + "/frame-action-deploy-contract"
     );
     res.setHeader("Content-Type", "image/png");
     res.send(screenshotBuffer);
