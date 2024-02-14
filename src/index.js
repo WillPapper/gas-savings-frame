@@ -165,6 +165,19 @@ app.get("/frame-active-mint", async (req, res) => {
   });
 });
 
+app.get("/frame-active-mint-image", async (req, res) => {
+  try {
+    const screenshotBuffer = await generateImage(
+      baseUrl + "/frame-active-mint"
+    );
+    res.setHeader("Content-Type", "image/png");
+    res.send(screenshotBuffer);
+  } catch (error) {
+    console.error("Error generating screenshot:", error);
+    res.status(500).send("Failed to generate screenshot");
+  }
+});
+
 app.get("/frame-active-store-data", async (req, res) => {
   res.render("frame-active", {
     title: "Syndicate Gas Savings!",
@@ -173,12 +186,38 @@ app.get("/frame-active-store-data", async (req, res) => {
   });
 });
 
+app.get("/frame-active-store-data-image", async (req, res) => {
+  try {
+    const screenshotBuffer = await generateImage(
+      baseUrl + "/frame-active-store-data"
+    );
+    res.setHeader("Content-Type", "image/png");
+    res.send(screenshotBuffer);
+  } catch (error) {
+    console.error("Error generating screenshot:", error);
+    res.status(500).send("Failed to generate screenshot");
+  }
+});
+
 app.get("/frame-active-deploy-contract", async (req, res) => {
   res.render("frame-active", {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(3),
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionUSD(3),
   });
+});
+
+app.get("/frame-active-deploy-contract-image", async (req, res) => {
+  try {
+    const screenshotBuffer = await generateImage(
+      baseUrl + "/frame-active-deploy-contract"
+    );
+    res.setHeader("Content-Type", "image/png");
+    res.send(screenshotBuffer);
+  } catch (error) {
+    console.error("Error generating screenshot:", error);
+    res.status(500).send("Failed to generate screenshot");
+  }
 });
 
 app.get("/healthz", async (req, res) => {
