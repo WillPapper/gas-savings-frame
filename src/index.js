@@ -59,7 +59,7 @@ process.on("SIGINT", async () => {
 // Frame
 app.get("/", async (req, res) => {
   // Return the initial frame state
-  res.render("frame-initial-metadata", {
+  res.render("frame-metadata", {
     baseUrl: baseUrl,
   });
 });
