@@ -144,7 +144,7 @@ app.post("/", async (req, res) => {
   const buttonIndex = req.body.untrustedData.buttonIndex;
 
   if (buttonIndex === 1 || buttonIndex === 2 || buttonIndex === 3) {
-    sendSyndicateTransaction(buttonIndex, req.body.frameTrustedData);
+    sendSyndicateTransaction(buttonIndex, req.body.trustedData.messageBytes);
     // Return the clicked frame state
     // Mint button was clicked
     if (buttonIndex === 1) {
