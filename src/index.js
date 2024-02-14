@@ -63,6 +63,7 @@ app.get("/", async (req, res) => {
   // Return the initial frame state
   res.render("frame-metadata", {
     baseUrl: baseUrl,
+    frameImage: "frame-initial-image",
   });
 });
 
@@ -99,6 +100,14 @@ app.get("/frame-initial-image", async (req, res) => {
     console.error("Error generating screenshot:", error);
     res.status(500).send("Failed to generate screenshot");
   }
+});
+
+app.get("/frame-active", async (req, res) => {
+  res.render("frame-active", {
+    title: "Syndicate Gas Savings!",
+    estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(1000),
+    estimateGasUsedUSD: await estimateGasUsedUSD(1000),
+  });
 });
 
 app.get("/healthz", async (req, res) => {
