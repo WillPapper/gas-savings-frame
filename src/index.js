@@ -123,9 +123,21 @@ async function generateImage(url, width = 800, aspectRatio = 1.91) {
 }
 
 async function estimateGasUsedUSD(actionCount) {
-  return gasPerAction * actionCount * ethPriceUsd;
+  return Number(gasPerAction * actionCount * ethPriceUsd).toLocaleString(
+    "en-US",
+    {
+      minimumFractionDigits: 12,
+      maximumFractionDigits: 12,
+    }
+  );
 }
 
 async function estimateGasUsedMainnetUSD(actionCount) {
-  return gasPerActionMainnet * actionCount * ethPriceUsd;
+  return Number(gasPerActionMainnet * actionCount * ethPriceUsd).toLocaleString(
+    "en-US",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }
+  );
 }
