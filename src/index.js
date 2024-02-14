@@ -193,6 +193,7 @@ app.get("/frame-initial", async (req, res) => {
 });
 
 app.get("/frame-initial-image", async (req, res) => {
+  console.log("Frame initial image");
   try {
     const screenshotBuffer = await generateImage(baseUrl + "/frame-initial");
     res.setHeader("Content-Type", "image/png");
