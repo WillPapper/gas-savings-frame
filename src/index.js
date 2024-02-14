@@ -121,4 +121,10 @@ async function generateImage(url, width = 800, aspectRatio = 1.91) {
   return screenshotBuffer;
 }
 
-async function estimateGasUsed() {}
+async function estimateGasUsed(actionCount) {
+  return gasPerAction * actionCount * ethPriceUsd;
+}
+
+async function estimateGasUsedMainnet(actionCount) {
+  return gasPerActionMainnet * actionCount * ethPriceUsd;
+}
