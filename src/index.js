@@ -3,7 +3,7 @@ const mustacheExpress = require("mustache-express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const puppeteer = require("puppeteer");
-const { ethers } = require("ethers");
+import { createPublicClient, http } from "viem";
 
 const app = express();
 app.use(bodyParser.json());
