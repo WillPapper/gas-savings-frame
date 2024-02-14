@@ -38,8 +38,7 @@ contract SyndicateGasSavingsNFT is ERC721, Ownable {
     // You can call `transferOwnership` to do this.
     constructor() ERC721("Syndicate Gas Savings NFT", "SAVEGAS") Ownable(msg.sender) {
         // Update this with your own NFT collection's metadata
-        // TODO: Set this value
-        baseURI = "";
+        baseURI = "https://gas-savings-frame.onrender.com/nft-metadata/";
         // Metadata updates evey 1000 interactions
         interactionInterval = 1000;
 
