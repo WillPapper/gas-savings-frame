@@ -266,15 +266,37 @@ app.get("/frame-active-deploy-contract-image", async (req, res) => {
 app.get("/metadata/:actionCount", async (req, res) => {
   const id = req.params.actionCount; // Capture the dynamic part of the URL
 
-  res.json({
-    id: id,
-    metadata: {
-      // Mock metadata values, replace these with actual metadata retrieved from your source
-      title: `Metadata for ID ${id}`,
-      description: `This is a placeholder metadata description for ID ${id}.`,
-      // Add more metadata fields as needed
-    },
-  });
+  if (actionCount > 0 && actionCount < 15) {
+    res.sendFile(__dirname + "/public/metadata/1.json");
+  } else if (actionCount >= 15 && actionCount < 50) {
+    res.sendFile(__dirname + "/public/metadata/2.json");
+  } else if (actionCount >= 50 && actionCount < 100) {
+    res.sendFile(__dirname + "/public/metadata/3.json");
+  } else if (actionCount >= 100 && actionCount < 200) {
+    res.sendFile(__dirname + "/public/metadata/4.json");
+  } else if (actionCount >= 200 && actionCount < 400) {
+    res.sendFile(__dirname + "/public/metadata/5.json");
+  } else if (actionCount >= 400 && actionCount < 800) {
+    res.sendFile(__dirname + "/public/metadata/6.json");
+  } else if (actionCount >= 800 && actionCount < 2000) {
+    res.sendFile(__dirname + "/public/metadata/7.json");
+  } else if (actionCount >= 2000 && actionCount < 4000) {
+    res.sendFile(__dirname + "/public/metadata/8.json");
+  } else if (actionCount >= 4000 && actionCount < 8000) {
+    res.sendFile(__dirname + "/public/metadata/9.json");
+  } else if (actionCount >= 8000 && actionCount < 16000) {
+    res.sendFile(__dirname + "/public/metadata/10.json");
+  } else if (actionCount >= 16000 && actionCount < 32000) {
+    res.sendFile(__dirname + "/public/metadata/11.json");
+  } else if (actionCount >= 32000 && actionCount < 64000) {
+    res.sendFile(__dirname + "/public/metadata/12.json");
+  } else if (actionCount >= 64000 && actionCount < 128000) {
+    res.sendFile(__dirname + "/public/metadata/13.json");
+  }
+  // Placeholder before adding more actions
+  else {
+    res.sendFile(__dirname + "/public/metadata/13.json");
+  }
 });
 
 app.get("/healthz", async (req, res) => {
