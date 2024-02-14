@@ -3,6 +3,12 @@
 // Example NFT contract for the Syndicate Frame API
 // Deployed to 0xE23F12c297A6AFc67BdC0d6faB10B26f41B7a8E1 on the Syndicate Frame
 // Chain
+// Wallets in wallet pool are:
+// 0xa027cb4e5c487470e2b296041bcf02adeba0dfa1
+// 0x8976c7643e853be50312a9b421a2400f129b5f2e
+// 0xa0047267957b069874b336303302d48a9eaeb9ec
+// 0xb434d8c1dac71ad18dfd1d130e745e6f16e1f37a
+// 0x54b6750d18a0a922f8ecdf4bd249884f700913db
 
 pragma solidity ^0.8.20;
 
