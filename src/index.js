@@ -1,6 +1,8 @@
 const express = require("express");
 const mustacheExpress = require("mustache-express");
 const cors = require("cors");
+// Timestamp-based UUID to bust the Farcaster Frames cache
+import { v1 as uuidv1 } from "uuid";
 const puppeteer = require("puppeteer");
 const { createPublicClient, http } = require("viem");
 const { defineChain } = require("viem");
@@ -133,7 +135,7 @@ app.get("/", async (req, res) => {
   // Return the initial frame state
   res.render("frame-metadata", {
     baseUrl: baseUrl,
-    frameImage: "frame-initial-image",
+    frameImage: "frame-initial-image/" + uuidv1(),
   });
 });
 
@@ -174,11 +176,12 @@ app.post("/", async (req, res) => {
     // Refresh the current frame
     res.render("frame-metadata", {
       baseUrl: baseUrl,
-      frameImage: "frame-initial-image",
+      frameImage: "frame-initial-image/" + uuidv1(),
     });
   }
 });
 
+// The UUID is purely used to bust the cache of the image
 app.get("/frame-initial", async (req, res) => {
   console.log("Getting gas savings");
   let actionCount = await getActionCount();
@@ -199,7 +202,7 @@ app.get("/frame-initial", async (req, res) => {
   });
 });
 
-app.get("/frame-initial-image", async (req, res) => {
+app.get("/frame-initial-image/:uuid", async (req, res) => {
   console.log("Frame initial image");
   try {
     const screenshotBuffer = await generateImage(baseUrl + "/frame-initial");
