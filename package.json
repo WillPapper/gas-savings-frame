@@ -16,10 +16,14 @@
     "puppeteer": "^22.0.0"
   },
   "scripts": {
-    "start": "node src/index.js",
+    "start": "yarn run build:css && node src/index.js",
     "start:dev": "NODE_ENV=development node src/index.js",
     "start:prod": "NODE_ENV=production node src/index.js",
     "dev": "nodemon --exec yarn run start:dev",
-    "install-chrome": "npx puppeteer browsers install chrome"
+    "install-chrome": "npx puppeteer browsers install chrome",
+    "build:css": "tailwindcss -i ./src/public/styles.css -o ./src/public/output.css"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
   }
 }
