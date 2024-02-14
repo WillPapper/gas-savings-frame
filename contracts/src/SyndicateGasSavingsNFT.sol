@@ -7,6 +7,7 @@ pragma solidity ^0.8.20;
 import {ERC721} from "../lib/openzeppelin-contracts/contracts/token/ERC721//ERC721.sol";
 import {Ownable} from "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import {Strings} from "../lib/openzeppelin-contracts/contracts/utils/Strings.sol";
+import {Counter} from "./Counter.sol";
 
 contract SyndicateGasSavingsNFT is ERC721, Ownable {
     using Strings for uint256;
@@ -18,10 +19,14 @@ contract SyndicateGasSavingsNFT is ERC721, Ownable {
     string public baseURI;
 
     mapping(address authorizedMinter => bool authorized) public authorizedMinters;
+    mapping(uint256 tokenId => string data) public dataStore;
+    string public constant DATA_TO_STORE = "This is a string stored on Syndicate's L3!";
 
     event AuthorizedMinterSet(address indexed minter, bool authorized);
     event BaseTokenURISet(string tokenURI);
     event InteractionIntervalSet(uint256 interval);
+    event DataStored(uint256 tokenId, string data);
+    event ContractDeployed(address indexed contractAddress);
 
     modifier onlyAuthorizedMinter() {
         require(authorizedMinters[msg.sender], "SyndicateGasSavingsNFT: Mint must be triggered by API");
@@ -51,6 +56,22 @@ contract SyndicateGasSavingsNFT is ERC721, Ownable {
     function mint(address to) public onlyAuthorizedMinter {
         ++currentTokenId;
         _mint(to, currentTokenId);
+    }
+
+    function storeData(address to) public onlyAuthorizedMinter {
+        ++currentTokenId;
+        dataStore[currentTokenId] = DATA_TO_STORE;
+        _mint(to, currentTokenId);
+
+        emit DataStored(currentTokenId, DATA_TO_STORE);
+    }
+
+    function deployContract(address to) public onlyAuthorizedMinter {
+        ++currentTokenId;
+        Counter counter = new Counter();
+        _mint(to, currentTokenId);
+
+        emit ContractDeployed(address(counter));
     }
 
     // Set the token URI for all tokens that don't have a custom tokenURI set.
