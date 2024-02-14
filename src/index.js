@@ -170,6 +170,7 @@ app.post("/", async (req, res) => {
   }
   // Refresh button was clicked
   else {
+    console.log("Refresh button was clicked!");
     // Refresh the current frame
     res.render("frame-metadata", {
       baseUrl: baseUrl,
