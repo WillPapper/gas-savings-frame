@@ -267,7 +267,7 @@ app.get("/frame-active-deploy-contract-image", async (req, res) => {
 });
 
 app.get("/metadata/:actionCount", async (req, res) => {
-  const id = req.params.actionCount; // Capture the dynamic part of the URL
+  const actionCount = parseInt(req.params.actionCount, 10); // Capture the dynamic part of the URL
 
   if (actionCount > 0 && actionCount < 15) {
     res.sendFile(__dirname + "/public/metadata/1.json");
