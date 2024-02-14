@@ -208,6 +208,8 @@ app.get("/frame-active-mint", async (req, res) => {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(1),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(1),
+    baseUrl: baseUrl,
+    actionImage: "img/actions/mint.png",
   });
 });
 
@@ -229,6 +231,8 @@ app.get("/frame-active-store-data", async (req, res) => {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(2),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(2),
+    baseUrl: baseUrl,
+    actionImage: "img/actions/store.png",
   });
 });
 
@@ -250,6 +254,8 @@ app.get("/frame-active-deploy-contract", async (req, res) => {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(3),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(3),
+    baseUrl: baseUrl,
+    actionImage: "img/actions/deploy.png",
   });
 });
 
