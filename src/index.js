@@ -72,8 +72,9 @@ app.post("/", async (req, res) => {
 
 app.get("/frame-initial", async (req, res) => {
   res.render("frame-initial", {
-    title: "Hello, Mustache!",
-    message: "Mustache is working with Express!",
+    title: "Syndicate Gas Savings!",
+    estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(1000),
+    estimateGasUsedUSD: await estimateGasUsedUSD(1000),
   });
 });
 
@@ -121,10 +122,10 @@ async function generateImage(url, width = 800, aspectRatio = 1.91) {
   return screenshotBuffer;
 }
 
-async function estimateGasUsed(actionCount) {
+async function estimateGasUsedUSD(actionCount) {
   return gasPerAction * actionCount * ethPriceUsd;
 }
 
-async function estimateGasUsedMainnet(actionCount) {
+async function estimateGasUsedMainnetUSD(actionCount) {
   return gasPerActionMainnet * actionCount * ethPriceUsd;
 }
