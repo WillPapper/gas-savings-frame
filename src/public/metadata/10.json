@@ -1,0 +1,24 @@
+{
+  "name": "Built with Syndicate Frame API and Syndicate Chain",
+  "description": "Go to frame.syndicate.io to learn more.",
+  "external_url": "https://frame.syndicate.io",
+  "image": "10-City-of-Coins.webp",
+  "attributes": [
+    {
+      "trait_type": "Gas Saved",
+      "value": "City of coins"
+    },
+    {
+      "trait_type": "Chain",
+      "value": "Syndicate Frame Chain"
+    },
+    {
+      "trait_type": "Gas",
+      "value": "Sponsored by Syndicate"
+    },
+    {
+      "trait_type": "Level",
+      "value": 10
+    }
+  ]
+}

@@ -263,6 +263,20 @@ app.get("/frame-active-deploy-contract-image", async (req, res) => {
   }
 });
 
+app.get("/metadata/:actionCount", async (req, res) => {
+  const id = req.params.actionCount; // Capture the dynamic part of the URL
+
+  res.json({
+    id: id,
+    metadata: {
+      // Mock metadata values, replace these with actual metadata retrieved from your source
+      title: `Metadata for ID ${id}`,
+      description: `This is a placeholder metadata description for ID ${id}.`,
+      // Add more metadata fields as needed
+    },
+  });
+});
+
 app.get("/healthz", async (req, res) => {
   res.send("ok");
 });
