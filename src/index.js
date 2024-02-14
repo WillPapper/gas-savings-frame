@@ -144,7 +144,7 @@ app.post("/", async (req, res) => {
   const buttonIndex = req.body.untrustedData.buttonIndex;
 
   if (buttonIndex === 1 || buttonIndex === 2 || buttonIndex === 3) {
-    sendSyndicateTransaction(buttonIndex, req.body.frameTrustedData);
+    sendSyndicateTransaction(buttonIndex, req.body.trustedData.messageBytes);
     // Return the clicked frame state
     // Mint button was clicked
     if (buttonIndex === 1) {
@@ -208,6 +208,8 @@ app.get("/frame-active-mint", async (req, res) => {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(1),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(1),
+    baseUrl: baseUrl,
+    actionImage: "img/actions/mint.png",
   });
 });
 
@@ -229,6 +231,8 @@ app.get("/frame-active-store-data", async (req, res) => {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(2),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(2),
+    baseUrl: baseUrl,
+    actionImage: "img/actions/store.png",
   });
 });
 
@@ -250,6 +254,8 @@ app.get("/frame-active-deploy-contract", async (req, res) => {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(3),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(3),
+    baseUrl: baseUrl,
+    actionImage: "img/actions/deploy.png",
   });
 });
 
@@ -267,7 +273,7 @@ app.get("/frame-active-deploy-contract-image", async (req, res) => {
 });
 
 app.get("/metadata/:actionCount", async (req, res) => {
-  const id = req.params.actionCount; // Capture the dynamic part of the URL
+  const actionCount = parseInt(req.params.actionCount, 10); // Capture the dynamic part of the URL
 
   if (actionCount > 0 && actionCount < 15) {
     res.sendFile(__dirname + "/public/metadata/1.json");
@@ -455,7 +461,12 @@ async function getActionImageUri() {
 
 async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
   // Default value and also used for the mint button of buttonIndex 1
-  let functionSignature = "mint(address)";
+  console.log("sendSyndicateTransaction Button index: ", buttonIndex);
+  console.log(
+    "sendSyndicateTransaction Frame trusted data: ",
+    frameTrustedData
+  );
+  let functionSignature = "mint(address to)";
   // Store data button was clicked
   if (buttonIndex === 2) {
     functionSignature = "storeData(address)";
@@ -477,4 +488,8 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
       args: { to: "{frame-user}" },
     }),
   });
+  console.log(
+    "sendSyndicateTransaction Syndicate transaction response: ",
+    await res.json()
+  );
 }
