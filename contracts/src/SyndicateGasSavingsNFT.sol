@@ -9,33 +9,19 @@ import {Ownable} from "../lib/openzeppelin-contracts/contracts/access/Ownable.so
 
 contract SyndicateGasSavingsNFT is ERC721, Ownable {
     uint256 public currentTokenId = 0;
-    string public defaultURI;
+    // Every X interactions leads to a metadata update. The interaction interval
+    // can be updated by the owner as needed
+    uint256 public interactionInterval;
+    string public baseURI;
 
     mapping(address authorizedMinter => bool authorized) public authorizedMinters;
-    mapping(uint256 tokenId => string tokenURI) public tokenURIs;
-    mapping(uint256 tokenId => bool locked) public lockedTokenURIs;
 
-    // Keep track of mint limits
-    uint256 public maxMintPerAddress;
-    mapping(address minted => uint256 count) public mintCount;
-
-    event DefaultTokenURISet(string tokenURI);
-    event TokenURISet(uint256 indexed tokenId, string tokenURI);
-    event TokenURILocked(uint256 indexed tokenId);
     event AuthorizedMinterSet(address indexed minter, bool authorized);
+    event BaseTokenURISet(string tokenURI);
+    event InteractionIntervalSet(uint256 interval);
 
     modifier onlyAuthorizedMinter() {
-        require(authorizedMinters[msg.sender], "FrameNFTs: Mint must be triggered by API");
-        _;
-    }
-
-    modifier onlyUnlockedTokenURI(uint256 tokenId) {
-        require(!lockedTokenURIs[tokenId], "FrameNFTs: Token URI is locked");
-        _;
-    }
-
-    modifier onlyBelowMaxMint(address to) {
-        require(mintCount[to] < maxMintPerAddress, "FrameNFTs: Max mint reached");
+        require(authorizedMinters[msg.sender], "SyndicateGasSavingsNFT: Mint must be triggered by API");
         _;
     }
 
@@ -44,81 +30,47 @@ contract SyndicateGasSavingsNFT is ERC721, Ownable {
     // You can call `transferOwnership` to do this.
     constructor() ERC721("Syndicate Gas Savings NFT", "SAVEGAS") Ownable(msg.sender) {
         // Update this with your own NFT collection's metadata
-        defaultURI = "ipfs://QmSFqezaUhBKr32Z2vgFrbDPGYdbcj8zQcQvsDqbU6b6UH";
-        maxMintPerAddress = 1;
+        // TODO: Set this value
+        baseURI = "";
+        // Metadata updates evey 1000 interactions
+        interactionInterval = 1000;
 
         // The deployer is set as an authorized minter, allowing them to set up
         // owner mints manually via the contract as needed
         authorizedMinters[msg.sender] = true;
         emit AuthorizedMinterSet(msg.sender, true);
 
-        // Authorize Syndicate's API-based wallet pool as a minter on Base
-        // Mainnet
-        authorizeBaseMainnetSyndicateAPI();
+        // Authorize Syndicate's API-based wallet pool as a minter on the
+        // Syndicate Frame Chain
+        authorizeFrameChainSyndicateAPI();
     }
 
-    // This function is currently the only supported function in the
-    // frame.syndicate.io API
-    function mint(address to) public onlyAuthorizedMinter onlyBelowMaxMint(to) {
+    function mint(address to) public onlyAuthorizedMinter(to) {
         ++currentTokenId;
-        ++mintCount[to];
         _mint(to, currentTokenId);
-    }
-
-    // This function is not yet supported in the frame.syndicate.io API
-    // We will update this example repository when it is supported!
-    function mint(address to, string memory _tokenURI) public onlyAuthorizedMinter onlyBelowMaxMint(to) {
-        ++currentTokenId;
-        ++mintCount[to];
-        tokenURIs[currentTokenId] = _tokenURI;
-        _mint(to, currentTokenId);
-
-        emit TokenURISet(currentTokenId, _tokenURI);
-    }
-
-    // This function is not yet supported in the frame.syndicate.io API
-    // We will update this example repository when it is supported!
-    function setTokenURI(uint256 tokenId, string memory _tokenURI)
-        public
-        onlyAuthorizedMinter
-        onlyUnlockedTokenURI(tokenId)
-    {
-        tokenURIs[tokenId] = _tokenURI;
-
-        emit TokenURISet(tokenId, _tokenURI);
-    }
-
-    // Since this action is irreversible, we require the owner to call it
-    function lockTokenURI(uint256 tokenId) public onlyOwner {
-        lockedTokenURIs[tokenId] = true;
-
-        emit TokenURILocked(tokenId);
     }
 
     // Set the token URI for all tokens that don't have a custom tokenURI set.
     // Must be called by the owner given its global impact on the collection
-    function setDefaultTokenURI(string memory _tokenURI) public onlyOwner {
-        defaultURI = _tokenURI;
-        emit DefaultTokenURISet(_tokenURI);
+    function setBaseURI(string memory _baseURI) public onlyOwner {
+        baseURI = _baseURI;
+        emit BaseTokenURISet(baseURI);
     }
 
-    // If you'd like to use an ID-based tokenURI (e.g. /1, /2, etc), you can
-    // override this function The majority of Frames use cases are relying on
-    // dynamically generated data, so our assumption is that a separate URI for
-    // each token + a default URI for unset tokens is the most useful
-    // If you'd prefer an ID-based structure, you can override this function to
-    // enable that instead
+    function setInteractionInterval(uint256 _interactionInterval) public onlyOwner {
+        interactionInterval = _interactionInterval;
+        emit InteractionIntervalSet(_interactionInterval);
+    }
+
     function tokenURI(uint256 tokenId) public view virtual override(ERC721) returns (string memory) {
-        if (bytes(tokenURIs[tokenId]).length > 0) {
-            return tokenURIs[tokenId];
-        } else {
-            return defaultURI;
-        }
-    }
+        // Require that the token ID exists before querying it
+        _requireOwned(tokenId);
 
-    // Only the owner can set the max mint per address
-    function setMaxMintPerAddress(uint256 _maxMintPerAddress) public onlyOwner {
-        maxMintPerAddress = _maxMintPerAddress;
+        // Calculate interval for metadata update for all tokens
+        // Solidity automatically truncates, so any tokens under the starting interval are 0
+        uint256 interval = currentTokenId / interactionInterval;
+
+        abi.encodePacked(baseURI, interactionInterval);
     }
 
     // Only the owner can set authorized minters. True = authorized, false =
@@ -134,22 +86,14 @@ contract SyndicateGasSavingsNFT is ERC721, Ownable {
     // If you've set up your own Syndicate account, you can change this function
     // to your own wallet addresses
     function authorizeBaseMainnetSyndicateAPI() internal {
-        authorizedMinters[0x3D0263e0101DE2E9070737Df30236867485A5208] = true;
-        authorizedMinters[0x98407Cb54D8dc219d8BF04C9018B512dDbB96caB] = true;
-        authorizedMinters[0xF43A72c1a41b7361728C83699f69b5280161F0A5] = true;
-        authorizedMinters[0x94702712BA81C0D065665B8b0312D87B190EbA37] = true;
-        authorizedMinters[0x10FD71C6a3eF8F75d65ab9F3d77c364C321Faeb5] = true;
+        authorizedMinters[0xEb788291f8f33039EfB82530A1a14490930c049B] = true;
 
-        emit AuthorizedMinterSet(0x3D0263e0101DE2E9070737Df30236867485A5208, true);
-        emit AuthorizedMinterSet(0x98407Cb54D8dc219d8BF04C9018B512dDbB96caB, true);
-        emit AuthorizedMinterSet(0xF43A72c1a41b7361728C83699f69b5280161F0A5, true);
-        emit AuthorizedMinterSet(0x94702712BA81C0D065665B8b0312D87B190EbA37, true);
-        emit AuthorizedMinterSet(0x10FD71C6a3eF8F75d65ab9F3d77c364C321Faeb5, true);
+        emit AuthorizedMinterSet(0xEb788291f8f33039EfB82530A1a14490930c049B, true);
     }
 
     // This function ensures that ETH sent directly to the contract by mistake
     // is rejected
     fallback() external payable {
-        revert("FrameNFTs: Does not accept ETH");
+        revert("SyndicateGasSavingsNFT: Does not accept ETH");
     }
 }
