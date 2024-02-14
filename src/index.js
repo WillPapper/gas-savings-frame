@@ -370,7 +370,7 @@ async function getActionCount() {
       functionName: "currentTokenId",
     });
   } catch {
-    console.log("Could not get action count");
+    console.log("ERROR: Could not get action count");
   }
   // Convert from bigint to a Number and then to a string to avoid "178n" with n
   // being appended to balances
