@@ -25,7 +25,7 @@ let baseUrl = process.env.RENDER_EXTERNAL_URL
 
 let contractAddress = process.env.CONTRACT_ADDRESS
   ? process.env.CONTRACT_ADDRESS
-  : 0xa4d2e7e997a837e6cb6cf0c1607d93955c31af7a;
+  : "0xa4d2e7e997A837e6CB6Cf0C1607D93955C31AF7a";
 
 const syndicateFrameChain = defineChain({
   id: 5101,
