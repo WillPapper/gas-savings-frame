@@ -46,6 +46,36 @@ let gasPerActionMainnet = process.env.GAS_PER_ACTION_MAINNET
   ? process.env.GAS_PER_ACTION_MAINNET
   : 0.004125349136786188;
 
+let gasPerMint = process.env.GAS_PER_MINT
+  ? process.env.GAS_PER_MINT
+  : 0.000000000015883006;
+
+// Assumes 35 gwei gas price
+// Calculated via: 0.000000000015883006 * (0.000000035/0.000000000000000251)
+let gasPerMintMainnet = process.env.GAS_PER_MINT_MAINNET
+  ? process.env.GAS_PER_MINT_MAINNET
+  : 0.002214761792828685;
+
+let gasPerStoreData = process.env.GAS_PER_STORE_DATA
+  ? process.env.GAS_PER_STORE_DATA
+  : 0.00000000003338648;
+
+// Assumes 35 gwei gas price
+// Calculated via: 0.00000000003338648 * (0.000000035/0.000000000000000251)
+let gasPerStoreDataMainnet = process.env.GAS_PER_STORE_DATA_MAINNET
+  ? process.env.GAS_PER_STORE_DATA_MAINNET
+  : 0.004655485258964143;
+
+let gasPerDeployContract = process.env.GAS_PER_DEPLOY_CONTRACT
+  ? process.env.GAS_PER_DEPLOY_CONTRACT
+  : 0.000000000039484454;
+
+// Assumes 35 gwei gas price
+// Calculated via: 0.000000000039484454 * (0.000000035/0.000000000000000251)
+let gasPerDeployContractMainnet = process.env.GAS_PER_DEPLOY_CONTRACT
+  ? process.env.GAS_PER_DEPLOY_CONTRACT
+  : 0.00550580035856573;
+
 let ethPriceUsd = process.env.GAS_PRICE_USD
   ? process.env.GAS_PRICE_USD
   : 2744.22;
@@ -76,10 +106,35 @@ app.post("/", async (req, res) => {
   if (buttonIndex === 1 || buttonIndex === 2 || buttonIndex === 3) {
     sendSyndicateTransaction(buttonIndex, req.body.frameTrustedData);
     // Return the clicked frame state
+    // Mint button was clicked
+    if (buttonIndex === 1) {
+      res.render("frame-metadata", {
+        baseUrl: baseUrl,
+        frameImage: "frame-active-mint-image",
+      });
+    }
+    // Store data button was clicked
+    else if (buttonIndex === 2) {
+      res.render("frame-metadata", {
+        baseUrl: baseUrl,
+        frameImage: "frame-active-store-data-image",
+      });
+    }
+    // Deploy contract button was clicked
+    else if (buttonIndex === 3) {
+      res.render("frame-metadata", {
+        baseUrl: baseUrl,
+        frameImage: "frame-active-deploy-contract-image",
+      });
+    }
   }
   // Refresh button was clicked
   else {
     // Refresh the current frame
+    res.render("frame-metadata", {
+      baseUrl: baseUrl,
+      frameImage: "frame-initial-image",
+    });
   }
 });
 
@@ -102,7 +157,23 @@ app.get("/frame-initial-image", async (req, res) => {
   }
 });
 
-app.get("/frame-active", async (req, res) => {
+app.get("/frame-active-mint", async (req, res) => {
+  res.render("frame-active", {
+    title: "Syndicate Gas Savings!",
+    estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(1000),
+    estimateGasUsedUSD: await estimateGasUsedUSD(1000),
+  });
+});
+
+app.get("/frame-active-store-data", async (req, res) => {
+  res.render("frame-active", {
+    title: "Syndicate Gas Savings!",
+    estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(1000),
+    estimateGasUsedUSD: await estimateGasUsedUSD(1000),
+  });
+});
+
+app.get("/frame-active-deploy-contract", async (req, res) => {
   res.render("frame-active", {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(1000),
@@ -161,6 +232,50 @@ async function estimateGasUsedMainnetUSD(actionCount) {
       maximumFractionDigits: 2,
     }
   );
+}
+
+async function estimateGasUsedPerActionUSD(buttonIndex) {
+  if (buttonIndex === 1) {
+    return Number(gasPerMint * ethPriceUsd).toLocaleString("en-US", {
+      minimumFractionDigits: 8,
+      maximumFractionDigits: 8,
+    });
+  } else if (buttonIndex === 2) {
+    return Number(gasPerStoreData * ethPriceUsd).toLocaleString("en-US", {
+      minimumFractionDigits: 8,
+      maximumFractionDigits: 8,
+    });
+  } else if (buttonIndex === 3) {
+    return Number(gasPerDeployContract * ethPriceUsd).toLocaleString("en-US", {
+      minimumFractionDigits: 8,
+      maximumFractionDigits: 8,
+    });
+  }
+}
+
+async function estimateGasUsedPerActionMainnetUSD(buttonIndex) {
+  if (buttonIndex === 1) {
+    return Number(gasPerMintMainnet * ethPriceUsd).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  } else if (buttonIndex === 2) {
+    return Number(gasPerStoreDataMainnet * ethPriceUsd).toLocaleString(
+      "en-US",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }
+    );
+  } else if (buttonIndex === 3) {
+    return Number(gasPerDeployContractMainnet * ethPriceUsd).toLocaleString(
+      "en-US",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }
+    );
+  }
 }
 
 async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
