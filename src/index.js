@@ -36,6 +36,9 @@ process.on("SIGINT", async () => {
 // Frame
 app.get("/", async (req, res) => {
   // Return the initial frame state
+  res.render("frame-initial-metadata", {
+    baseUrl: baseUrl,
+  });
 });
 
 // If we receive a post request, we know that this is a subsequent request to

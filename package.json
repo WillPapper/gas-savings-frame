@@ -19,7 +19,7 @@
     "start": "yarn run build:css && node src/index.js",
     "start:dev": "NODE_ENV=development yarn run start",
     "start:prod": "NODE_ENV=production yarn run start",
-    "dev": "nodemon --exec yarn run start:dev",
+    "dev": "nodemon -e js,mustache --exec yarn run start:dev",
     "install-chrome": "npx puppeteer browsers install chrome",
     "build:css": "tailwindcss -i ./src/public/styles.css -o ./src/public/output.css"
   },
