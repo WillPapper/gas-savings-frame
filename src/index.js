@@ -136,8 +136,8 @@ async function estimateGasUsedUSD(actionCount) {
   return Number(gasPerAction * actionCount * ethPriceUsd).toLocaleString(
     "en-US",
     {
-      minimumFractionDigits: 12,
-      maximumFractionDigits: 12,
+      minimumFractionDigits: 8,
+      maximumFractionDigits: 8,
     }
   );
 }
