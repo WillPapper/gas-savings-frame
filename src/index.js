@@ -67,7 +67,17 @@ app.get("/", async (req, res) => {
 // If we receive a post request, we know that this is a subsequent request to
 // the Frame
 app.post("/", async (req, res) => {
-  // Return the updated frame state
+  // Get the button index
+  const buttonIndex = req.body.untrustedData.buttonIndex;
+
+  if (buttonIndex === 1 || buttonIndex === 2 || buttonIndex === 3) {
+    sendSyndicateTransaction(buttonIndex, req.body.frameTrustedData);
+    // Return the clicked frame state
+  }
+  // Refresh button was clicked
+  else {
+    // Refresh the current frame
+  }
 });
 
 app.get("/frame-initial", async (req, res) => {
@@ -140,4 +150,30 @@ async function estimateGasUsedMainnetUSD(actionCount) {
       maximumFractionDigits: 2,
     }
   );
+}
+
+async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
+  // Default value and also used for the mint button of buttonIndex 1
+  let functionSignature = "mint(address)";
+  // Store data button was clicked
+  if (buttonIndex === 2) {
+    functionSignature = "storeData(address)";
+  }
+  // Deploy contract button was clicked
+  else if (buttonIndex === 3) {
+    functionSignature = "deployContract(address)";
+  }
+  const res = await fetch("https://frame.syndicate.io/api/v2/sendTransaction", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + process.env.SYNDICATE_FRAME_API_KEY,
+    },
+    body: JSON.stringify({
+      frameTrustedData: frameTrustedData,
+      contractAddress: "0xE23F12c297A6AFc67BdC0d6faB10B26f41B7a8E1",
+      functionSignature: functionSignature,
+      args: { to: "{frame-user}" },
+    }),
+  });
 }
