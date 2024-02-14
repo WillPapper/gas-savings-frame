@@ -3,7 +3,8 @@ const mustacheExpress = require("mustache-express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const puppeteer = require("puppeteer");
-const { ethers } = require("ethers");
+const { createPublicClient, http } = require("viem");
+const { defineChain } = require("viem");
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,6 +19,43 @@ app.set("views", __dirname + "/views");
 
 require("dotenv").config();
 
+const syndicateFrameChain = defineChain({
+  id: 5101,
+  name: "Syndicate Frame Chain",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc-frame.syndicate.io"],
+    },
+  },
+  blockExplorers: {
+    default: { name: "Explorer", url: "https://explorer-frame.syndicate.io" },
+  },
+});
+
+const viemClient = createPublicClient({
+  chain: syndicateFrameChain,
+  transport: http(),
+});
+
+const erc721Address = "0xE23F12c297A6AFc67BdC0d6faB10B26f41B7a8E1";
+const erc721Abi = [
+  {
+    name: "currentTokenId",
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+
+getActionCount().then((actionCount) => {
+  console.log("Get action count: ", actionCount);
+});
+
 // Puppeteer browser instance
 let browser;
 // If a Render External URL is provided, use that as the base URL. Otherwise, use localhost:3000
@@ -25,7 +63,9 @@ let baseUrl = process.env.RENDER_EXTERNAL_URL
   ? process.env.RENDER_EXTERNAL_URL
   : "http://localhost:3000";
 
-let contractAddress = 0xe23f12c297a6afc67bdc0d6fab10b26f41b7a8e1;
+let contractAddress = process.env.CONTRACT_ADDRESS
+  ? process.env.CONTRACT_ADDRESS
+  : 0xe23f12c297a6afc67bdc0d6fab10b26f41b7a8e1;
 
 // Gas calculation info
 // Average gas for all three of the actions
@@ -141,8 +181,12 @@ app.post("/", async (req, res) => {
 app.get("/frame-initial", async (req, res) => {
   res.render("frame-initial", {
     title: "Syndicate Gas Savings!",
-    estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(1000),
-    estimateGasUsedUSD: await estimateGasUsedUSD(1000),
+    estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(
+      Number(await getActionCount())
+    ),
+    estimateGasUsedUSD: await estimateGasUsedUSD(
+      Number(await getActionCount())
+    ),
   });
 });
 
@@ -315,6 +359,24 @@ async function estimateGasUsedPerActionMainnetUSD(buttonIndex) {
       }
     );
   }
+}
+
+async function getActionCount() {
+  let actionCount;
+  try {
+    actionCount = await viemClient.readContract({
+      address: erc721Address,
+      abi: erc721Abi,
+      functionName: "currentTokenId",
+    });
+  } catch {
+    console.log("ERROR: Could not get action count");
+  }
+  // Convert from bigint to a Number and then to a string to avoid "178n" with n
+  // being appended to balances
+  // This is safe given that the balance will not exceed the max size of a
+  // Javascript number
+  return Number(actionCount).toString();
 }
 
 async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
