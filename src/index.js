@@ -34,29 +34,32 @@ process.on("SIGINT", async () => {
 
 // If we receive a get request, we know that this is the initial request to the
 // Frame
-app.get("/frame", async (req, res) => {
-  res.render("frame-image", {
+app.get("/", async (req, res) => {
+  // Return the initial frame state
+});
+
+// If we receive a post request, we know that this is a subsequent request to
+// the Frame
+app.post("/", async (req, res) => {
+  // Return the updated frame state
+});
+
+app.get("/frame-initial", async (req, res) => {
+  res.render("frame-initial", {
     title: "Hello, Mustache!",
     message: "Mustache is working with Express!",
   });
 });
 
-app.get("/frame-image", async (req, res) => {
+app.get("/frame-initial-image", async (req, res) => {
   try {
-    const screenshotBuffer = await generateImage(baseUrl);
+    const screenshotBuffer = await generateImage(baseUrl + "/frame-initial");
     res.setHeader("Content-Type", "image/png");
     res.send(screenshotBuffer);
   } catch (error) {
     console.error("Error generating screenshot:", error);
     res.status(500).send("Failed to generate screenshot");
   }
-});
-
-// If we receive a post request, we know that this is a subsequent request to
-// the Frame
-app.post("/frame", async (req, res) => {
-  // Return the HTML file
-  res.sendFile(__dirname + "/public/index.html");
 });
 
 app.get("/healthz", async (req, res) => {
