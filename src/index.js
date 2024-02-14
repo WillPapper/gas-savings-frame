@@ -466,7 +466,7 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
     "sendSyndicateTransaction Frame trusted data: ",
     frameTrustedData
   );
-  let functionSignature = "mint(address)";
+  let functionSignature = "mint(address to)";
   // Store data button was clicked
   if (buttonIndex === 2) {
     functionSignature = "storeData(address)";
