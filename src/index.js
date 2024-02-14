@@ -179,16 +179,22 @@ app.post("/", async (req, res) => {
 });
 
 app.get("/frame-initial", async (req, res) => {
+  console.log("Getting gas savings");
+  let actionCount = await getActionCount();
+
+  console.log("Action count is ", actionCount);
+  console.log(
+    "Gas used in USD: ",
+    await estimateGasUsedMainnetUSD(actionCount)
+  );
   res.render("frame-initial", {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(
-      Number(await getActionCount())
+      Number(actionCount)
     ),
-    estimateGasUsedUSD: await estimateGasUsedUSD(
-      Number(await getActionCount())
-    ),
+    estimateGasUsedUSD: await estimateGasUsedUSD(Number(actionCount)),
     baseUrl: baseUrl,
-    actionImage: await getActionImageUri(),
+    actionImage: await getActionImageUri(actionCount),
   });
 });
 
@@ -424,9 +430,7 @@ async function getActionCount() {
   return Number(actionCount).toString();
 }
 
-async function getActionImageUri() {
-  let actionCount = await getActionCount();
-
+async function getActionImageUri(actionCount) {
   if (actionCount > 0 && actionCount < 15) {
     return "img/1-Single.png";
   } else if (actionCount >= 15 && actionCount < 50) {
