@@ -2,7 +2,7 @@
   "name": "Built with Syndicate Frame API and Syndicate Chain",
   "description": "Go to frame.syndicate.io to learn more.",
   "external_url": "https://frame.syndicate.io",
-  "image": "3-Several.webp",
+  "image": "https://gas-savings-frame.syndicate.io/img/3-Several.png",
   "attributes": [
     {
       "trait_type": "Gas Saved",

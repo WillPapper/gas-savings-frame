@@ -2,7 +2,7 @@
   "name": "Built with Syndicate Frame API and Syndicate Chain",
   "description": "Go to frame.syndicate.io to learn more.",
   "external_url": "https://frame.syndicate.io",
-  "image": "10-City-of-Coins.webp",
+  "image": "https://gas-savings-frame.syndicate.io/img/10-City.png",
   "attributes": [
     {
       "trait_type": "Gas Saved",
