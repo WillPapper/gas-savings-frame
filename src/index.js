@@ -8,6 +8,8 @@ const { ethers } = require("ethers");
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+// Surface files in the public/ directory
+app.use(express.static(__dirname + "/public"));
 
 // Register '.mustache' extension with The Mustache Express
 app.engine("mustache", mustacheExpress());
@@ -32,7 +34,7 @@ process.on("SIGINT", async () => {
 
 // If we receive a get request, we know that this is the initial request to the
 // Frame
-app.get("/", async (req, res) => {
+app.get("/frame", async (req, res) => {
   res.render("frame-image", {
     title: "Hello, Mustache!",
     message: "Mustache is working with Express!",
@@ -52,7 +54,7 @@ app.get("/frame-image", async (req, res) => {
 
 // If we receive a post request, we know that this is a subsequent request to
 // the Frame
-app.post("/", async (req, res) => {
+app.post("/frame", async (req, res) => {
   // Return the HTML file
   res.sendFile(__dirname + "/public/index.html");
 });
