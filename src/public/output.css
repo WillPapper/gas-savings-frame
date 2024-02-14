@@ -556,8 +556,8 @@ video {
   position: relative;
 }
 
-.left-\[306px\] {
-  left: 306px;
+.left-\[263px\] {
+  left: 263px;
 }
 
 .left-\[356px\] {
@@ -646,6 +646,10 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.font-bold {
+  font-weight: 700;
 }
 
 .font-normal {
