@@ -8,6 +8,8 @@ const { ethers } = require("ethers");
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+// Surface files in the public/ directory
+app.use(express.static(__dirname + "/public"));
 
 // Register '.mustache' extension with The Mustache Express
 app.engine("mustache", mustacheExpress());
@@ -33,28 +35,34 @@ process.on("SIGINT", async () => {
 // If we receive a get request, we know that this is the initial request to the
 // Frame
 app.get("/", async (req, res) => {
-  res.render("index", {
+  // Return the initial frame state
+  res.render("frame-initial-metadata", {
+    baseUrl: baseUrl,
+  });
+});
+
+// If we receive a post request, we know that this is a subsequent request to
+// the Frame
+app.post("/", async (req, res) => {
+  // Return the updated frame state
+});
+
+app.get("/frame-initial", async (req, res) => {
+  res.render("frame-initial", {
     title: "Hello, Mustache!",
     message: "Mustache is working with Express!",
   });
 });
 
-app.get("/frame-image", async (req, res) => {
+app.get("/frame-initial-image", async (req, res) => {
   try {
-    const screenshotBuffer = await generateImage(baseUrl);
+    const screenshotBuffer = await generateImage(baseUrl + "/frame-initial");
     res.setHeader("Content-Type", "image/png");
     res.send(screenshotBuffer);
   } catch (error) {
     console.error("Error generating screenshot:", error);
     res.status(500).send("Failed to generate screenshot");
   }
-});
-
-// If we receive a post request, we know that this is a subsequent request to
-// the Frame
-app.post("/", async (req, res) => {
-  // Return the HTML file
-  res.sendFile(__dirname + "/public/index.html");
 });
 
 app.get("/healthz", async (req, res) => {
@@ -75,7 +83,8 @@ async function startBrowser() {
 
 // Function to generate a screenshot of a given URL and return as a buffer
 // Aspect ratio of 1.91 is the aspect ratio of the Frame: https://docs.farcaster.xyz/reference/frames/spec
-async function generateImage(url, width = 1910, aspectRatio = 1.91) {
+// Use 800 x 418 pixels as the default size for the 1.91 aspect ratio
+async function generateImage(url, width = 800, aspectRatio = 1.91) {
   const height = Math.round(width / aspectRatio);
   const browser = await puppeteer.launch();
   const page = await browser.newPage();

@@ -13,13 +13,15 @@
     "ethers": "^6.8.1",
     "express": "^4.18.2",
     "mustache-express": "^1.3.2",
-    "puppeteer": "^22.0.0"
+    "puppeteer": "^22.0.0",
+    "tailwindcss": "^3.4.1"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "start:dev": "NODE_ENV=development node src/index.js",
-    "start:prod": "NODE_ENV=production node src/index.js",
-    "dev": "nodemon --exec yarn run start:dev",
-    "install-chrome": "npx puppeteer browsers install chrome"
+    "start": "yarn run build:css && node src/index.js",
+    "start:dev": "NODE_ENV=development yarn run start",
+    "start:prod": "NODE_ENV=production yarn run start",
+    "dev": "nodemon -e js,mustache --exec yarn run start:dev",
+    "install-chrome": "npx puppeteer browsers install chrome",
+    "build:css": "tailwindcss -i ./src/public/styles.css -o ./src/public/output.css"
   }
 }
