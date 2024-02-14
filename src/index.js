@@ -421,35 +421,35 @@ async function getActionImageUri() {
   let actionCount = await getActionCount();
 
   if (actionCount > 0 && actionCount < 15) {
-    return "img/1";
+    return "img/1-Single.png";
   } else if (actionCount >= 15 && actionCount < 50) {
-    return "img/2";
+    return "img/2-Few.png";
   } else if (actionCount >= 50 && actionCount < 100) {
-    return "img/3";
+    return "img/3-Several.png";
   } else if (actionCount >= 100 && actionCount < 200) {
-    return "img/4";
+    return "img/4-More.png";
   } else if (actionCount >= 200 && actionCount < 400) {
-    return "img/5";
+    return "img/5-Ramping.png";
   } else if (actionCount >= 400 && actionCount < 800) {
-    return "img/6";
+    return "img/6-Many.png";
   } else if (actionCount >= 800 && actionCount < 2000) {
-    return "img/7";
+    return "img/7-Rich.png";
   } else if (actionCount >= 2000 && actionCount < 4000) {
-    return "img/8";
+    return "img/8-Lots.png";
   } else if (actionCount >= 4000 && actionCount < 8000) {
-    return "img/9";
+    return "img/9-Mountain.png";
   } else if (actionCount >= 8000 && actionCount < 16000) {
-    return "img/10";
+    return "img/10-City.png";
   } else if (actionCount >= 16000 && actionCount < 32000) {
-    return "img/11";
+    return "img/11-Country.png";
   } else if (actionCount >= 32000 && actionCount < 64000) {
-    return "img/12";
+    return "img/12-Globe.png";
   } else if (actionCount >= 64000 && actionCount < 128000) {
-    return "img/13";
+    return "img/13-Infinity.png";
   }
   // Placeholder before adding more actions
   else {
-    return "img/13";
+    return "img/13-Infinity.png";
   }
 }
 
