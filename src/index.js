@@ -2,7 +2,7 @@ const express = require("express");
 const mustacheExpress = require("mustache-express");
 const cors = require("cors");
 // Timestamp-based UUID to bust the Farcaster Frames cache
-import { v1 as uuidv1 } from "uuid";
+const { v1: uuidv1 } = require("uuid");
 const puppeteer = require("puppeteer");
 const { createPublicClient, http } = require("viem");
 const { defineChain } = require("viem");
