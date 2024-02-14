@@ -1,13 +1,12 @@
 const express = require("express");
 const mustacheExpress = require("mustache-express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const puppeteer = require("puppeteer");
 const { createPublicClient, http } = require("viem");
 const { defineChain } = require("viem");
 
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors());
 // Surface files in the public/ directory
 app.use(express.static(__dirname + "/public"));
