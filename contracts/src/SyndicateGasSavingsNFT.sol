@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // By Will Papper
 // Example NFT contract for the Syndicate Frame API
-// Deployed on the Syndicate Frame Chain
+// Deployed on the Syndicate Frame Chain at 0xa4d2e7e997A837e6CB6Cf0C1607D93955C31AF7a
 // Wallets in wallet pool are:
 // 0xa027cb4e5c487470e2b296041bcf02adeba0dfa1
 // 0x8976c7643e853be50312a9b421a2400f129b5f2e

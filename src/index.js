@@ -18,6 +18,15 @@ app.set("views", __dirname + "/views");
 
 require("dotenv").config();
 
+// If a Render External URL is provided, use that as the base URL. Otherwise, use localhost:3000
+let baseUrl = process.env.RENDER_EXTERNAL_URL
+  ? process.env.RENDER_EXTERNAL_URL
+  : "http://localhost:3000";
+
+let contractAddress = process.env.CONTRACT_ADDRESS
+  ? process.env.CONTRACT_ADDRESS
+  : 0xa4d2e7e997a837e6cb6cf0c1607d93955c31af7a;
+
 const syndicateFrameChain = defineChain({
   id: 5101,
   name: "Syndicate Frame Chain",
@@ -41,7 +50,7 @@ const viemClient = createPublicClient({
   transport: http(),
 });
 
-const erc721Address = "0xE23F12c297A6AFc67BdC0d6faB10B26f41B7a8E1";
+const erc721Address = contractAddress;
 const erc721Abi = [
   {
     name: "currentTokenId",
@@ -57,14 +66,6 @@ getActionCount().then((actionCount) => {
 
 // Puppeteer browser instance
 let browser;
-// If a Render External URL is provided, use that as the base URL. Otherwise, use localhost:3000
-let baseUrl = process.env.RENDER_EXTERNAL_URL
-  ? process.env.RENDER_EXTERNAL_URL
-  : "http://localhost:3000";
-
-let contractAddress = process.env.CONTRACT_ADDRESS
-  ? process.env.CONTRACT_ADDRESS
-  : 0xe23f12c297a6afc67bdc0d6fab10b26f41b7a8e1;
 
 // Gas calculation info
 // Average gas for all three of the actions
@@ -433,7 +434,7 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
     },
     body: JSON.stringify({
       frameTrustedData: frameTrustedData,
-      contractAddress: "0xE23F12c297A6AFc67BdC0d6faB10B26f41B7a8E1",
+      contractAddress: contractAddress,
       functionSignature: functionSignature,
       args: { to: "{frame-user}" },
     }),
