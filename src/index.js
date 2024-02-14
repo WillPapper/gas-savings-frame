@@ -1,13 +1,12 @@
 const express = require("express");
 const mustacheExpress = require("mustache-express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const puppeteer = require("puppeteer");
 const { createPublicClient, http } = require("viem");
 const { defineChain } = require("viem");
 
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors());
 // Surface files in the public/ directory
 app.use(express.static(__dirname + "/public"));
@@ -18,6 +17,15 @@ app.set("view engine", "mustache");
 app.set("views", __dirname + "/views");
 
 require("dotenv").config();
+
+// If a Render External URL is provided, use that as the base URL. Otherwise, use localhost:3000
+let baseUrl = process.env.RENDER_EXTERNAL_URL
+  ? process.env.RENDER_EXTERNAL_URL
+  : "http://localhost:3000";
+
+let contractAddress = process.env.CONTRACT_ADDRESS
+  ? process.env.CONTRACT_ADDRESS
+  : "0xa4d2e7e997A837e6CB6Cf0C1607D93955C31AF7a";
 
 const syndicateFrameChain = defineChain({
   id: 5101,
@@ -42,7 +50,7 @@ const viemClient = createPublicClient({
   transport: http(),
 });
 
-const erc721Address = "0xE23F12c297A6AFc67BdC0d6faB10B26f41B7a8E1";
+const erc721Address = contractAddress;
 const erc721Abi = [
   {
     name: "currentTokenId",
@@ -58,14 +66,6 @@ getActionCount().then((actionCount) => {
 
 // Puppeteer browser instance
 let browser;
-// If a Render External URL is provided, use that as the base URL. Otherwise, use localhost:3000
-let baseUrl = process.env.RENDER_EXTERNAL_URL
-  ? process.env.RENDER_EXTERNAL_URL
-  : "http://localhost:3000";
-
-let contractAddress = process.env.CONTRACT_ADDRESS
-  ? process.env.CONTRACT_ADDRESS
-  : 0xe23f12c297a6afc67bdc0d6fab10b26f41b7a8e1;
 
 // Gas calculation info
 // Average gas for all three of the actions
@@ -187,6 +187,8 @@ app.get("/frame-initial", async (req, res) => {
     estimateGasUsedUSD: await estimateGasUsedUSD(
       Number(await getActionCount())
     ),
+    baseUrl: baseUrl,
+    actionImage: await getActionImageUri(),
   });
 });
 
@@ -261,6 +263,42 @@ app.get("/frame-active-deploy-contract-image", async (req, res) => {
   } catch (error) {
     console.error("Error generating screenshot:", error);
     res.status(500).send("Failed to generate screenshot");
+  }
+});
+
+app.get("/metadata/:actionCount", async (req, res) => {
+  const id = req.params.actionCount; // Capture the dynamic part of the URL
+
+  if (actionCount > 0 && actionCount < 15) {
+    res.sendFile(__dirname + "/public/metadata/1.json");
+  } else if (actionCount >= 15 && actionCount < 50) {
+    res.sendFile(__dirname + "/public/metadata/2.json");
+  } else if (actionCount >= 50 && actionCount < 100) {
+    res.sendFile(__dirname + "/public/metadata/3.json");
+  } else if (actionCount >= 100 && actionCount < 200) {
+    res.sendFile(__dirname + "/public/metadata/4.json");
+  } else if (actionCount >= 200 && actionCount < 400) {
+    res.sendFile(__dirname + "/public/metadata/5.json");
+  } else if (actionCount >= 400 && actionCount < 800) {
+    res.sendFile(__dirname + "/public/metadata/6.json");
+  } else if (actionCount >= 800 && actionCount < 2000) {
+    res.sendFile(__dirname + "/public/metadata/7.json");
+  } else if (actionCount >= 2000 && actionCount < 4000) {
+    res.sendFile(__dirname + "/public/metadata/8.json");
+  } else if (actionCount >= 4000 && actionCount < 8000) {
+    res.sendFile(__dirname + "/public/metadata/9.json");
+  } else if (actionCount >= 8000 && actionCount < 16000) {
+    res.sendFile(__dirname + "/public/metadata/10.json");
+  } else if (actionCount >= 16000 && actionCount < 32000) {
+    res.sendFile(__dirname + "/public/metadata/11.json");
+  } else if (actionCount >= 32000 && actionCount < 64000) {
+    res.sendFile(__dirname + "/public/metadata/12.json");
+  } else if (actionCount >= 64000 && actionCount < 128000) {
+    res.sendFile(__dirname + "/public/metadata/13.json");
+  }
+  // Placeholder before adding more actions
+  else {
+    res.sendFile(__dirname + "/public/metadata/13.json");
   }
 });
 
@@ -379,6 +417,42 @@ async function getActionCount() {
   return Number(actionCount).toString();
 }
 
+async function getActionImageUri() {
+  let actionCount = await getActionCount();
+
+  if (actionCount > 0 && actionCount < 15) {
+    return "img/1-Single.png";
+  } else if (actionCount >= 15 && actionCount < 50) {
+    return "img/2-Few.png";
+  } else if (actionCount >= 50 && actionCount < 100) {
+    return "img/3-Several.png";
+  } else if (actionCount >= 100 && actionCount < 200) {
+    return "img/4-More.png";
+  } else if (actionCount >= 200 && actionCount < 400) {
+    return "img/5-Ramping.png";
+  } else if (actionCount >= 400 && actionCount < 800) {
+    return "img/6-Many.png";
+  } else if (actionCount >= 800 && actionCount < 2000) {
+    return "img/7-Rich.png";
+  } else if (actionCount >= 2000 && actionCount < 4000) {
+    return "img/8-Lots.png";
+  } else if (actionCount >= 4000 && actionCount < 8000) {
+    return "img/9-Mountain.png";
+  } else if (actionCount >= 8000 && actionCount < 16000) {
+    return "img/10-City.png";
+  } else if (actionCount >= 16000 && actionCount < 32000) {
+    return "img/11-Country.png";
+  } else if (actionCount >= 32000 && actionCount < 64000) {
+    return "img/12-Globe.png";
+  } else if (actionCount >= 64000 && actionCount < 128000) {
+    return "img/13-Infinity.png";
+  }
+  // Placeholder before adding more actions
+  else {
+    return "img/13-Infinity.png";
+  }
+}
+
 async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
   // Default value and also used for the mint button of buttonIndex 1
   let functionSignature = "mint(address)";
@@ -398,7 +472,7 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
     },
     body: JSON.stringify({
       frameTrustedData: frameTrustedData,
-      contractAddress: "0xE23F12c297A6AFc67BdC0d6faB10B26f41B7a8E1",
+      contractAddress: contractAddress,
       functionSignature: functionSignature,
       args: { to: "{frame-user}" },
     }),

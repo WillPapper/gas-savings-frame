@@ -1,0 +1,24 @@
+{
+  "name": "Built with Syndicate Frame API and Syndicate Chain",
+  "description": "Go to frame.syndicate.io to learn more.",
+  "external_url": "https://frame.syndicate.io",
+  "image": "https://gas-savings-frame.syndicate.io/img/11-Country.png",
+  "attributes": [
+    {
+      "trait_type": "Gas Saved",
+      "value": "Country of coins"
+    },
+    {
+      "trait_type": "Chain",
+      "value": "Syndicate Frame Chain"
+    },
+    {
+      "trait_type": "Gas",
+      "value": "Sponsored by Syndicate"
+    },
+    {
+      "trait_type": "Level",
+      "value": 11
+    }
+  ]
+}
