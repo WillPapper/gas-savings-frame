@@ -1,6 +1,8 @@
 const express = require("express");
 const mustacheExpress = require("mustache-express");
 const cors = require("cors");
+// Timestamp-based UUID to bust the Farcaster Frames cache
+const { v1: uuidv1 } = require("uuid");
 const puppeteer = require("puppeteer");
 const { createPublicClient, http } = require("viem");
 const { defineChain } = require("viem");
@@ -133,7 +135,7 @@ app.get("/", async (req, res) => {
   // Return the initial frame state
   res.render("frame-metadata", {
     baseUrl: baseUrl,
-    frameImage: "frame-initial-image",
+    frameImage: "frame-initial-image/" + uuidv1(),
   });
 });
 
@@ -150,49 +152,58 @@ app.post("/", async (req, res) => {
     if (buttonIndex === 1) {
       res.render("frame-metadata", {
         baseUrl: baseUrl,
-        frameImage: "frame-active-mint-image",
+        frameImage: "frame-action-mint-image",
       });
     }
     // Store data button was clicked
     else if (buttonIndex === 2) {
       res.render("frame-metadata", {
         baseUrl: baseUrl,
-        frameImage: "frame-active-store-data-image",
+        frameImage: "frame-action-store-data-image",
       });
     }
     // Deploy contract button was clicked
     else if (buttonIndex === 3) {
       res.render("frame-metadata", {
         baseUrl: baseUrl,
-        frameImage: "frame-active-deploy-contract-image",
+        frameImage: "frame-action-deploy-contract-image",
       });
     }
   }
   // Refresh button was clicked
   else {
+    console.log("Refresh button was clicked!");
     // Refresh the current frame
     res.render("frame-metadata", {
       baseUrl: baseUrl,
-      frameImage: "frame-initial-image",
+      frameImage: "frame-initial-image/" + uuidv1(),
     });
   }
 });
 
+// The UUID is purely used to bust the cache of the image
 app.get("/frame-initial", async (req, res) => {
+  console.log("Getting gas savings");
+  let actionCount = await getActionCount();
+
+  console.log("Action count is ", actionCount);
+  console.log(
+    "Gas used in USD: ",
+    await estimateGasUsedMainnetUSD(actionCount)
+  );
   res.render("frame-initial", {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(
-      Number(await getActionCount())
+      Number(actionCount)
     ),
-    estimateGasUsedUSD: await estimateGasUsedUSD(
-      Number(await getActionCount())
-    ),
+    estimateGasUsedUSD: await estimateGasUsedUSD(Number(actionCount)),
     baseUrl: baseUrl,
-    actionImage: await getActionImageUri(),
+    actionImage: await getActionImageUri(actionCount),
   });
 });
 
-app.get("/frame-initial-image", async (req, res) => {
+app.get("/frame-initial-image/:uuid", async (req, res) => {
+  console.log("Frame initial image");
   try {
     const screenshotBuffer = await generateImage(baseUrl + "/frame-initial");
     res.setHeader("Content-Type", "image/png");
@@ -203,8 +214,8 @@ app.get("/frame-initial-image", async (req, res) => {
   }
 });
 
-app.get("/frame-active-mint", async (req, res) => {
-  res.render("frame-active", {
+app.get("/frame-action-mint", async (req, res) => {
+  res.render("frame-action", {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(1),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(1),
@@ -213,10 +224,10 @@ app.get("/frame-active-mint", async (req, res) => {
   });
 });
 
-app.get("/frame-active-mint-image", async (req, res) => {
+app.get("/frame-action-mint-image", async (req, res) => {
   try {
     const screenshotBuffer = await generateImage(
-      baseUrl + "/frame-active-mint"
+      baseUrl + "/frame-action-mint"
     );
     res.setHeader("Content-Type", "image/png");
     res.send(screenshotBuffer);
@@ -226,8 +237,8 @@ app.get("/frame-active-mint-image", async (req, res) => {
   }
 });
 
-app.get("/frame-active-store-data", async (req, res) => {
-  res.render("frame-active", {
+app.get("/frame-action-store-data", async (req, res) => {
+  res.render("frame-action", {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(2),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(2),
@@ -236,10 +247,10 @@ app.get("/frame-active-store-data", async (req, res) => {
   });
 });
 
-app.get("/frame-active-store-data-image", async (req, res) => {
+app.get("/frame-action-store-data-image", async (req, res) => {
   try {
     const screenshotBuffer = await generateImage(
-      baseUrl + "/frame-active-store-data"
+      baseUrl + "/frame-action-store-data"
     );
     res.setHeader("Content-Type", "image/png");
     res.send(screenshotBuffer);
@@ -249,8 +260,8 @@ app.get("/frame-active-store-data-image", async (req, res) => {
   }
 });
 
-app.get("/frame-active-deploy-contract", async (req, res) => {
-  res.render("frame-active", {
+app.get("/frame-action-deploy-contract", async (req, res) => {
+  res.render("frame-action", {
     title: "Syndicate Gas Savings!",
     estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(3),
     estimateGasUsedUSD: await estimateGasUsedPerActionUSD(3),
@@ -259,10 +270,10 @@ app.get("/frame-active-deploy-contract", async (req, res) => {
   });
 });
 
-app.get("/frame-active-deploy-contract-image", async (req, res) => {
+app.get("/frame-action-deploy-contract-image", async (req, res) => {
   try {
     const screenshotBuffer = await generateImage(
-      baseUrl + "/frame-active-deploy-contract"
+      baseUrl + "/frame-action-deploy-contract"
     );
     res.setHeader("Content-Type", "image/png");
     res.send(screenshotBuffer);
@@ -423,9 +434,7 @@ async function getActionCount() {
   return Number(actionCount).toString();
 }
 
-async function getActionImageUri() {
-  let actionCount = await getActionCount();
-
+async function getActionImageUri(actionCount) {
   if (actionCount > 0 && actionCount < 15) {
     return "img/1-Single.png";
   } else if (actionCount >= 15 && actionCount < 50) {
