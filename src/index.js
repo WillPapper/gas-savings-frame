@@ -25,6 +25,8 @@ let baseUrl = process.env.RENDER_EXTERNAL_URL
   ? process.env.RENDER_EXTERNAL_URL
   : "http://localhost:3000";
 
+let contractAddress = 0xe23f12c297a6afc67bdc0d6fab10b26f41b7a8e1;
+
 // Gas calculation info
 // Average gas for all three of the actions
 // Calculated via (0.000000000015883006 + 0.00000000003338648 + 0.000000000039484454)/3
