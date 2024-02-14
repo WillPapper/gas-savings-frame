@@ -160,24 +160,24 @@ app.get("/frame-initial-image", async (req, res) => {
 app.get("/frame-active-mint", async (req, res) => {
   res.render("frame-active", {
     title: "Syndicate Gas Savings!",
-    estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(1000),
-    estimateGasUsedUSD: await estimateGasUsedUSD(1000),
+    estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(1),
+    estimateGasUsedMainnetUSD: await estimateGasUsedPerActionUSD(1),
   });
 });
 
 app.get("/frame-active-store-data", async (req, res) => {
   res.render("frame-active", {
     title: "Syndicate Gas Savings!",
-    estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(1000),
-    estimateGasUsedUSD: await estimateGasUsedUSD(1000),
+    estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(2),
+    estimateGasUsedMainnetUSD: await estimateGasUsedPerActionUSD(2),
   });
 });
 
 app.get("/frame-active-deploy-contract", async (req, res) => {
   res.render("frame-active", {
     title: "Syndicate Gas Savings!",
-    estimateGasUsedMainnetUSD: await estimateGasUsedMainnetUSD(1000),
-    estimateGasUsedUSD: await estimateGasUsedUSD(1000),
+    estimateGasUsedMainnetUSD: await estimateGasUsedPerActionMainnetUSD(3),
+    estimateGasUsedMainnetUSD: await estimateGasUsedPerActionUSD(3),
   });
 });
 
