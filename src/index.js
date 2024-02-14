@@ -187,6 +187,8 @@ app.get("/frame-initial", async (req, res) => {
     estimateGasUsedUSD: await estimateGasUsedUSD(
       Number(await getActionCount())
     ),
+    baseUrl: baseUrl,
+    actionImage: await getActionImageUri(),
   });
 });
 
@@ -413,6 +415,42 @@ async function getActionCount() {
   // This is safe given that the balance will not exceed the max size of a
   // Javascript number
   return Number(actionCount).toString();
+}
+
+async function getActionImageUri() {
+  let actionCount = await getActionCount();
+
+  if (actionCount > 0 && actionCount < 15) {
+    return "img/1";
+  } else if (actionCount >= 15 && actionCount < 50) {
+    return "img/2";
+  } else if (actionCount >= 50 && actionCount < 100) {
+    return "img/3";
+  } else if (actionCount >= 100 && actionCount < 200) {
+    return "img/4";
+  } else if (actionCount >= 200 && actionCount < 400) {
+    return "img/5";
+  } else if (actionCount >= 400 && actionCount < 800) {
+    return "img/6";
+  } else if (actionCount >= 800 && actionCount < 2000) {
+    return "img/7";
+  } else if (actionCount >= 2000 && actionCount < 4000) {
+    return "img/8";
+  } else if (actionCount >= 4000 && actionCount < 8000) {
+    return "img/9";
+  } else if (actionCount >= 8000 && actionCount < 16000) {
+    return "img/10";
+  } else if (actionCount >= 16000 && actionCount < 32000) {
+    return "img/11";
+  } else if (actionCount >= 32000 && actionCount < 64000) {
+    return "img/12";
+  } else if (actionCount >= 64000 && actionCount < 128000) {
+    return "img/13";
+  }
+  // Placeholder before adding more actions
+  else {
+    return "img/13";
+  }
 }
 
 async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
