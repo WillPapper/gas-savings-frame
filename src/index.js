@@ -284,37 +284,37 @@ app.get("/frame-action-deploy-contract-image", async (req, res) => {
 });
 
 app.get("/metadata/:actionCount", async (req, res) => {
-  const actionCount = parseInt(req.params.actionCount, 10); // Capture the dynamic part of the URL
+  const actionCount = parseInt(req.params.actionCount, 10);
 
-  if (actionCount > 0 && actionCount < 15) {
+  if (actionCount > 0 && actionCount <= 300) {
     res.sendFile(__dirname + "/public/metadata/1.json");
-  } else if (actionCount >= 15 && actionCount < 50) {
+  } else if (actionCount > 300 && actionCount <= 600) {
     res.sendFile(__dirname + "/public/metadata/2.json");
-  } else if (actionCount >= 50 && actionCount < 100) {
+  } else if (actionCount > 600 && actionCount <= 1200) {
     res.sendFile(__dirname + "/public/metadata/3.json");
-  } else if (actionCount >= 100 && actionCount < 200) {
+  } else if (actionCount > 1200 && actionCount <= 2500) {
     res.sendFile(__dirname + "/public/metadata/4.json");
-  } else if (actionCount >= 200 && actionCount < 400) {
+  } else if (actionCount > 2500 && actionCount <= 5000) {
     res.sendFile(__dirname + "/public/metadata/5.json");
-  } else if (actionCount >= 400 && actionCount < 800) {
+  } else if (actionCount > 5000 && actionCount <= 10000) {
     res.sendFile(__dirname + "/public/metadata/6.json");
-  } else if (actionCount >= 800 && actionCount < 2000) {
+  } else if (actionCount > 10000 && actionCount <= 20000) {
     res.sendFile(__dirname + "/public/metadata/7.json");
-  } else if (actionCount >= 2000 && actionCount < 4000) {
+  } else if (actionCount > 20000 && actionCount <= 40000) {
     res.sendFile(__dirname + "/public/metadata/8.json");
-  } else if (actionCount >= 4000 && actionCount < 8000) {
+  } else if (actionCount > 40000 && actionCount <= 80000) {
     res.sendFile(__dirname + "/public/metadata/9.json");
-  } else if (actionCount >= 8000 && actionCount < 16000) {
+  } else if (actionCount > 80000 && actionCount <= 160000) {
     res.sendFile(__dirname + "/public/metadata/10.json");
-  } else if (actionCount >= 16000 && actionCount < 32000) {
+  } else if (actionCount > 160000 && actionCount <= 320000) {
     res.sendFile(__dirname + "/public/metadata/11.json");
-  } else if (actionCount >= 32000 && actionCount < 64000) {
+  } else if (actionCount > 320000 && actionCount <= 640000) {
     res.sendFile(__dirname + "/public/metadata/12.json");
-  } else if (actionCount >= 64000 && actionCount < 128000) {
+  } else if (actionCount > 640000 && actionCount <= 1280000) {
     res.sendFile(__dirname + "/public/metadata/13.json");
-  }
-  // Placeholder before adding more actions
-  else {
+  } else if (actionCount > 1280000) {
+    res.sendFile(__dirname + "/public/metadata/14.json");
+  } else {
     res.sendFile(__dirname + "/public/metadata/14.json");
   }
 });
@@ -435,35 +435,35 @@ async function getActionCount() {
 }
 
 async function getActionImageUri(actionCount) {
-  if (actionCount > 0 && actionCount < 15) {
+  if (actionCount > 0 && actionCount <= 300) {
     return "img/1-Single.png";
-  } else if (actionCount >= 15 && actionCount < 50) {
+  } else if (actionCount > 300 && actionCount <= 600) {
     return "img/2-Few.png";
-  } else if (actionCount >= 50 && actionCount < 100) {
+  } else if (actionCount > 600 && actionCount <= 1200) {
     return "img/3-Several.png";
-  } else if (actionCount >= 100 && actionCount < 200) {
+  } else if (actionCount > 1200 && actionCount <= 2500) {
     return "img/4-More.png";
-  } else if (actionCount >= 200 && actionCount < 400) {
+  } else if (actionCount > 2500 && actionCount <= 5000) {
     return "img/5-Ramping.png";
-  } else if (actionCount >= 400 && actionCount < 800) {
+  } else if (actionCount > 5000 && actionCount <= 10000) {
     return "img/6-Many.png";
-  } else if (actionCount >= 800 && actionCount < 2000) {
+  } else if (actionCount > 10000 && actionCount <= 20000) {
     return "img/7-Rich.png";
-  } else if (actionCount >= 2000 && actionCount < 4000) {
+  } else if (actionCount > 20000 && actionCount <= 40000) {
     return "img/8-Lots.png";
-  } else if (actionCount >= 4000 && actionCount < 8000) {
+  } else if (actionCount > 40000 && actionCount <= 80000) {
     return "img/9-Mountain.png";
-  } else if (actionCount >= 8000 && actionCount < 16000) {
+  } else if (actionCount > 80000 && actionCount <= 160000) {
     return "img/10-City.png";
-  } else if (actionCount >= 16000 && actionCount < 32000) {
+  } else if (actionCount > 160000 && actionCount <= 320000) {
     return "img/11-Country.png";
-  } else if (actionCount >= 32000 && actionCount < 64000) {
+  } else if (actionCount > 320000 && actionCount <= 640000) {
     return "img/12-Globe.png";
-  } else if (actionCount >= 64000 && actionCount < 128000) {
+  } else if (actionCount > 640000 && actionCount <= 1280000) {
     return "img/13-Infinity.png";
-  }
-  // Placeholder before adding more actions
-  else {
+  } else if (actionCount > 1280000) {
+    return "img/14-Universe.png";
+  } else {
     return "img/14-Universe.png";
   }
 }
