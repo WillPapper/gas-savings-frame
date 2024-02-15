@@ -2,11 +2,11 @@
   "name": "Built with Syndicate Frame API and Syndicate Chain",
   "description": "Go to frame.syndicate.io to learn more.",
   "external_url": "https://frame.syndicate.io",
-  "image": "https://gas-savings-frame.syndicate.io/img/4-More.png",
+  "image": "https://gas-savings-frame.syndicate.io/img/14-Universe.png",
   "attributes": [
     {
       "trait_type": "Gas Saved",
-      "value": "More coins"
+      "value": "Universe"
     },
     {
       "trait_type": "Chain",
@@ -18,7 +18,7 @@
     },
     {
       "trait_type": "Level",
-      "value": 4
+      "value": 14
     }
   ]
 }

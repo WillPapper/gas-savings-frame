@@ -315,7 +315,7 @@ app.get("/metadata/:actionCount", async (req, res) => {
   }
   // Placeholder before adding more actions
   else {
-    res.sendFile(__dirname + "/public/metadata/13.json");
+    res.sendFile(__dirname + "/public/metadata/14.json");
   }
 });
 
@@ -464,7 +464,7 @@ async function getActionImageUri(actionCount) {
   }
   // Placeholder before adding more actions
   else {
-    return "img/13-Infinity.png";
+    return "img/14-Universe.png";
   }
 }
 

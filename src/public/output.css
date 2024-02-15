@@ -698,3 +698,27 @@ video {
   --tw-text-opacity: 1;
   color: rgb(254 240 138 / var(--tw-text-opacity));
 }
+
+@font-face {
+  font-family: "ABC Whyte Trial";
+
+  src: url("./fonts/ABCWhyte-Regular-Trial.woff2") format("woff2"),
+    url("./fonts/ABCWhyte-Regular-Trial.woff") format("woff"),
+    url("./fonts/ABCWhyte-Regular-Trial.otf") format("opentype");
+
+  font-weight: normal;
+
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ABC Whyte Inktrap Trial";
+
+  src: url("./fonts/ABCWhyteInktrap-Regular-Trial.woff2") format("woff2"),
+    url("./fonts/ABCWhyteInktrap-Regular-Trial.woff") format("woff"),
+    url("./fonts/ABCWhyteInktrap-Regular-Trial.otf") format("opentype");
+
+  font-weight: normal;
+
+  font-style: normal;
+}
