@@ -344,7 +344,15 @@ async function generateImage(url, width = 800, aspectRatio = 1.91) {
   const page = await browser.newPage();
   // Set viewport to match the Frame aspect ratio
   await page.setViewport({ width, height });
+
   await page.goto(url, { waitUntil: "networkidle2" });
+
+  // Wait for the image to load
+  await page.waitForSelector("#frame-image", { timeout: 9000 });
+  // Wait for the mainnet USD estimate to load
+  await page.waitForSelector("#estimateGasUsedMainnetUSD", { timeout: 9000 });
+  // Wait for the USD estimate to load
+  await page.waitForSelector("#estimateGasUsedUSD", { timeout: 9000 });
 
   // Take screenshot and return it to the Express server
   const screenshotBuffer = await page.screenshot({ encoding: "binary" });
