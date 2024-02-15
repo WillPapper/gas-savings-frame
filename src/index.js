@@ -486,11 +486,11 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
   let functionSignature = "mint(address to)";
   // Store data button was clicked
   if (buttonIndex === 2) {
-    functionSignature = "storeData(address)";
+    functionSignature = "storeData(address to)";
   }
   // Deploy contract button was clicked
   else if (buttonIndex === 3) {
-    functionSignature = "deployContract(address)";
+    functionSignature = "deployContract(address to)";
   }
   const res = await fetch("https://frame.syndicate.io/api/v2/sendTransaction", {
     method: "POST",
