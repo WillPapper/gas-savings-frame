@@ -339,25 +339,31 @@ async function startBrowser() {
 // Aspect ratio of 1.91 is the aspect ratio of the Frame: https://docs.farcaster.xyz/reference/frames/spec
 // Use 800 x 418 pixels as the default size for the 1.91 aspect ratio
 async function generateImage(url, width = 800, aspectRatio = 1.91) {
-  const height = Math.round(width / aspectRatio);
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  // Set viewport to match the Frame aspect ratio
-  await page.setViewport({ width, height });
+  try {
+    const height = Math.round(width / aspectRatio);
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    // Set viewport to match the Frame aspect ratio
+    await page.setViewport({ width, height });
 
-  await page.goto(url, { waitUntil: "networkidle2" });
+    await page.goto(url, { waitUntil: "networkidle2" });
 
-  // Wait for the image to load
-  await page.waitForSelector("#frame-image", { timeout: 9000 });
-  // Wait for the mainnet USD estimate to load
-  await page.waitForSelector("#estimateGasUsedMainnetUSD", { timeout: 9000 });
-  // Wait for the USD estimate to load
-  await page.waitForSelector("#estimateGasUsedUSD", { timeout: 9000 });
+    // Wait for the image to load
+    await page.waitForSelector("#frame-image", { timeout: 9000 });
+    // Wait for the mainnet USD estimate to load
+    await page.waitForSelector("#estimateGasUsedMainnetUSD", { timeout: 9000 });
+    // Wait for the USD estimate to load
+    await page.waitForSelector("#estimateGasUsedUSD", { timeout: 9000 });
 
-  // Take screenshot and return it to the Express server
-  const screenshotBuffer = await page.screenshot({ encoding: "binary" });
-  await browser.close();
-  return screenshotBuffer;
+    // Take screenshot and return it to the Express server
+    const screenshotBuffer = await page.screenshot({ encoding: "binary" });
+    await browser.close();
+    return screenshotBuffer;
+  } catch (error) {
+    console.error("Error generating screenshot:", error);
+    await browser.close();
+    throw error;
+  }
 }
 
 async function estimateGasUsedUSD(actionCount) {
