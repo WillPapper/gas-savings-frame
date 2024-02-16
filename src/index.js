@@ -339,25 +339,31 @@ async function startBrowser() {
 // Aspect ratio of 1.91 is the aspect ratio of the Frame: https://docs.farcaster.xyz/reference/frames/spec
 // Use 800 x 418 pixels as the default size for the 1.91 aspect ratio
 async function generateImage(url, width = 800, aspectRatio = 1.91) {
-  const height = Math.round(width / aspectRatio);
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  // Set viewport to match the Frame aspect ratio
-  await page.setViewport({ width, height });
+  try {
+    const height = Math.round(width / aspectRatio);
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    // Set viewport to match the Frame aspect ratio
+    await page.setViewport({ width, height });
 
-  await page.goto(url, { waitUntil: "networkidle2" });
+    await page.goto(url, { waitUntil: "networkidle2" });
 
-  // Wait for the image to load
-  await page.waitForSelector("#frame-image", { timeout: 9000 });
-  // Wait for the mainnet USD estimate to load
-  await page.waitForSelector("#estimateGasUsedMainnetUSD", { timeout: 9000 });
-  // Wait for the USD estimate to load
-  await page.waitForSelector("#estimateGasUsedUSD", { timeout: 9000 });
+    // Wait for the image to load
+    await page.waitForSelector("#frame-image", { timeout: 9000 });
+    // Wait for the mainnet USD estimate to load
+    await page.waitForSelector("#estimateGasUsedMainnetUSD", { timeout: 9000 });
+    // Wait for the USD estimate to load
+    await page.waitForSelector("#estimateGasUsedUSD", { timeout: 9000 });
 
-  // Take screenshot and return it to the Express server
-  const screenshotBuffer = await page.screenshot({ encoding: "binary" });
-  await browser.close();
-  return screenshotBuffer;
+    // Take screenshot and return it to the Express server
+    const screenshotBuffer = await page.screenshot({ encoding: "binary" });
+    await browser.close();
+    return screenshotBuffer;
+  } catch (error) {
+    console.error("generateImage error: ", error);
+    await browser.close();
+    throw error;
+  }
 }
 
 async function estimateGasUsedUSD(actionCount) {
@@ -433,7 +439,7 @@ async function getActionCount() {
       functionName: "currentTokenId",
     });
   } catch {
-    console.log("ERROR: Could not get action count");
+    console.log("getActionCount error: Could not get action count");
   }
   // Convert from bigint to a Number and then to a string to avoid "178n" with n
   // being appended to balances
@@ -483,6 +489,7 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
     "sendSyndicateTransaction Frame trusted data: ",
     frameTrustedData
   );
+
   let functionSignature = "mint(address to)";
   // Store data button was clicked
   if (buttonIndex === 2) {
@@ -492,21 +499,39 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
   else if (buttonIndex === 3) {
     functionSignature = "deployContract(address to)";
   }
-  const res = await fetch("https://frame.syndicate.io/api/v2/sendTransaction", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + process.env.SYNDICATE_FRAME_API_KEY,
-    },
-    body: JSON.stringify({
-      frameTrustedData: frameTrustedData,
-      contractAddress: contractAddress,
-      functionSignature: functionSignature,
-      args: { to: "{frame-user}" },
-    }),
-  });
-  console.log(
-    "sendSyndicateTransaction Syndicate transaction response: ",
-    await res.json()
-  );
+
+  try {
+    const res = await fetch(
+      "https://frame.syndicate.io/api/v2/sendTransaction",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + process.env.SYNDICATE_FRAME_API_KEY,
+        },
+        body: JSON.stringify({
+          frameTrustedData: frameTrustedData,
+          contractAddress: contractAddress,
+          functionSignature: functionSignature,
+          args: { to: "{frame-user}" },
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      // Try to read the response body and include it in the error message
+      const errorBody = await res.text();
+      throw new Error(
+        `Syndicate Frame API HTTP error! Status: ${res.status}, Body: ${errorBody}`
+      );
+    }
+
+    const jsonResponse = await res.json();
+    console.log(
+      "sendSyndicateTransaction Syndicate transaction response: ",
+      jsonResponse
+    );
+  } catch (err) {
+    console.log("sendSyndicateTransaction Error: ", err);
+  }
 }
