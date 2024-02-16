@@ -483,6 +483,7 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
     "sendSyndicateTransaction Frame trusted data: ",
     frameTrustedData
   );
+
   let functionSignature = "mint(address to)";
   // Store data button was clicked
   if (buttonIndex === 2) {
@@ -510,9 +511,15 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
         }),
       }
     );
+
+    if (!res.ok) {
+      throw new Error(`Syndicate Frame API HTTP error! status: ${res.status}`);
+    }
+
+    const jsonResponse = await res.json();
     console.log(
       "sendSyndicateTransaction Syndicate transaction response: ",
-      await res.json()
+      jsonResponse
     );
   } catch (err) {
     console.log("sendSyndicateTransaction Error: ", err);
