@@ -360,7 +360,7 @@ async function generateImage(url, width = 800, aspectRatio = 1.91) {
     await browser.close();
     return screenshotBuffer;
   } catch (error) {
-    console.error("Error generating screenshot:", error);
+    console.error("generateImage error: ", error);
     await browser.close();
     throw error;
   }
