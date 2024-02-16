@@ -492,21 +492,29 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
   else if (buttonIndex === 3) {
     functionSignature = "deployContract(address to)";
   }
-  const res = await fetch("https://frame.syndicate.io/api/v2/sendTransaction", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + process.env.SYNDICATE_FRAME_API_KEY,
-    },
-    body: JSON.stringify({
-      frameTrustedData: frameTrustedData,
-      contractAddress: contractAddress,
-      functionSignature: functionSignature,
-      args: { to: "{frame-user}" },
-    }),
-  });
-  console.log(
-    "sendSyndicateTransaction Syndicate transaction response: ",
-    await res.json()
-  );
+
+  try {
+    const res = await fetch(
+      "https://frame.syndicate.io/api/v2/sendTransaction",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + process.env.SYNDICATE_FRAME_API_KEY,
+        },
+        body: JSON.stringify({
+          frameTrustedData: frameTrustedData,
+          contractAddress: contractAddress,
+          functionSignature: functionSignature,
+          args: { to: "{frame-user}" },
+        }),
+      }
+    );
+    console.log(
+      "sendSyndicateTransaction Syndicate transaction response: ",
+      await res.json()
+    );
+  } catch (err) {
+    console.log("sendSyndicateTransaction Error: ", err);
+  }
 }
