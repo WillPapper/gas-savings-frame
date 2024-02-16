@@ -519,7 +519,11 @@ async function sendSyndicateTransaction(buttonIndex, frameTrustedData) {
     );
 
     if (!res.ok) {
-      throw new Error(`Syndicate Frame API HTTP error! status: ${res.status}`);
+      // Try to read the response body and include it in the error message
+      const errorBody = await res.text();
+      throw new Error(
+        `Syndicate Frame API HTTP error! Status: ${res.status}, Body: ${errorBody}`
+      );
     }
 
     const jsonResponse = await res.json();
